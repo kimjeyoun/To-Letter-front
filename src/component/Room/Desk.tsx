@@ -1,7 +1,12 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader, useThree, ThreeEvent } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
-import { MeshStandardMaterial } from "three";
+import { useRef, useEffect, useState } from "react";
+import {
+  MeshStandardMaterial,
+  EdgesGeometry,
+  LineSegments,
+  LineBasicMaterial,
+} from "three";
 import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
@@ -42,6 +47,8 @@ const Desk = () => {
   const { gl } = useThree();
   const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
 
+  const [hovered, setHovered] = useState(false);
+
   // 모델 수정
   useEffect(() => {
     if (deskglb && deskglb.scene) {
@@ -70,6 +77,22 @@ const Desk = () => {
             setMeshProperties(mesh, mesh.name);
             mesh.castShadow = true; // 그림자 생성
             mesh.receiveShadow = true; // 그림자 수신
+
+            if (hovered) {
+              // 테두리 추가
+              const edges = new EdgesGeometry(mesh.geometry);
+              const line = new LineSegments(
+                edges,
+                new LineBasicMaterial({ color: 0xffffff, linewidth: 0.001 })
+              );
+              mesh.add(line);
+            } else {
+              // 테두리 제거
+              const edges = mesh.children.find(
+                (child) => child instanceof LineSegments
+              );
+              if (edges) mesh.remove(edges);
+            }
           }
         }
       });
@@ -80,14 +103,16 @@ const Desk = () => {
         }
       });
     }
-  }, [deskglb, pencilglb]);
+  }, [deskglb, hovered, pencilglb]);
 
   const handlePointerOver = (event: ThreeEvent<MouseEvent>) => {
     gl.domElement.style.cursor = "pointer";
+    setHovered(true);
   };
 
   const handlePointerOut = (event: ThreeEvent<MouseEvent>) => {
     gl.domElement.style.cursor = "auto";
+    setHovered(false);
   };
 
   const toUserNicknameModalClick = (event: ThreeEvent<MouseEvent>) => {
