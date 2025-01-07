@@ -1,9 +1,16 @@
 "use client";
-import React, { useMemo } from "react";
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
+import React, { useEffect } from "react";
 import Tab from "@/components/atoms/Tab";
 import { usePathname, useRouter } from "next/navigation";
 import { NavBox } from "../atoms/Box";
-import { type menuTabDataI, menuList } from "@/lib/constants/menuTabList";
+import {
+  type menuTabDataI,
+  type menuI,
+  menuList,
+} from "@/lib/constants/menuTabList";
 
 type MenuListKeys = keyof typeof menuList;
 
@@ -14,17 +21,14 @@ type MenuListKeys = keyof typeof menuList;
 export default function MenuTab() {
   const router = useRouter();
   const pathname = usePathname();
+  const [firstPath, secondPath] = pathname.split("/").filter(Boolean);
+  console.log("pathname", pathname);
 
-  // `pathKey` 계산 최적화
-  const pathKey = useMemo(() => {
-    const [firstPath, secondPath] = pathname.split("/").filter(Boolean);
-    return (firstPath in menuList ? firstPath : secondPath) as MenuListKeys;
-  }, [pathname]);
+  const pathKey = (
+    firstPath in menuList ? firstPath : secondPath
+  ) as MenuListKeys;
 
-  // `menuList[pathKey]` 추출 최적화
-  const { category, menuTabData, tabOption } = useMemo(() => {
-    return menuList[pathKey];
-  }, [pathKey]);
+  const { category, menuTabData, tabOption } = menuList[pathKey];
 
   if (tabOption === "underline") {
     return (
