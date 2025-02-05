@@ -13,7 +13,7 @@ interface MyInfoI {
   nickname: string;
   prevNickname: string;
   isNicknameChecked: boolean;
-  userRole: "local" | "kakao";
+  userRole: "localLogin" | "kakaoLogin";
 }
 
 /**
