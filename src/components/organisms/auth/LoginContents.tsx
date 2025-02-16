@@ -78,7 +78,7 @@ export default function LoginContents() {
         alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error) {
+    } catch (_error: any) {
       alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
     }
   };
