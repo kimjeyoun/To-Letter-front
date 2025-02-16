@@ -1,7 +1,7 @@
 export interface menuTabDataI {
   title: string;
   path: string;
-  userRoleAble?: "localLogin" | "kakaoLogin" | "all";
+  userRoleAble?: "local" | "all";
 }
 
 export interface menuI {
@@ -44,7 +44,7 @@ export const menuList: menuListI = {
       {
         title: "Account",
         path: "/mypage/passwordmailverify",
-        userRoleAble: "localLogin",
+        userRoleAble: "local",
       },
       { title: "End Letter", path: "/mypage/letterend", userRoleAble: "all" },
     ],

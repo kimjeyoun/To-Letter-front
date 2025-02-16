@@ -30,16 +30,10 @@ export default function KakaoSignupContents() {
     message: "",
     visible: false,
   });
+  /** 닉네임 중복 체크 여부 관리 state */
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   /** 회원가입 정보 관리 recoil */
   const [signupForm, setSignupForm] = useRecoilState(signupState);
-
-  /** 닉네임 체크 함수 */
-  const checkNickname = (bool: boolean) => {
-    setSignupForm((prev) => ({
-      ...prev,
-      isNicknameChecked: bool,
-    }));
-  };
 
   /** 닉네임 입력 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +41,7 @@ export default function KakaoSignupContents() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    if (e.target.name === "nickname") checkNickname(false);
+    if (e.target.name === "nickname") setIsNicknameChecked(false);
   };
 
   /** 주소 입력 모달 열기 함수 */
@@ -71,7 +65,7 @@ export default function KakaoSignupContents() {
         message: "우편함 주소를 입력해주세요.",
       },
       {
-        check: signupForm.isNicknameChecked,
+        check: isNicknameChecked,
         message: "닉네임 중복 체크를 해주세요.",
       },
     ];
@@ -118,10 +112,10 @@ export default function KakaoSignupContents() {
         });
         if (res.status === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
-          checkNickname(true);
+          setIsNicknameChecked(true);
         } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
-          checkNickname(false);
+          setIsNicknameChecked(false);
         }
       } catch (error: any) {
         setToast({
@@ -153,7 +147,7 @@ export default function KakaoSignupContents() {
           isExistButton={true}
           buttonTitle="중복 체크"
           onClick={onClickConfirmNickname}
-          $disable={signupForm.isNicknameChecked}
+          $disable={isNicknameChecked}
         />
         <InputForm
           keyValue="inputform-email"

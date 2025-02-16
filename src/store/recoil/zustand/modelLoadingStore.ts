@@ -8,7 +8,6 @@ interface ModalLoadingState {
   setTotalModels: (callback: (prev: number) => number) => void;
   incrementLoadedCount: () => void;
   resetLoading: () => void;
-  disableLoading: () => void;
 }
 
 export const useModelLoadingStore = create<ModalLoadingState>((set) => ({
@@ -45,13 +44,5 @@ export const useModelLoadingStore = create<ModalLoadingState>((set) => ({
       loadedCount: 0,
       progress: 0,
       isComplete: false,
-    }),
-
-  disableLoading: () =>
-    set({
-      totalModels: 13,
-      loadedCount: 13,
-      progress: 100,
-      isComplete: true,
     }),
 }));

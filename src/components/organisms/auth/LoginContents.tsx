@@ -78,7 +78,7 @@ export default function LoginContents() {
         alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error: any) {
+    } catch (_error) {
       alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
     }
   };
@@ -143,6 +143,7 @@ export default function LoginContents() {
           $color="#e9e9e9"
           $fontSize="16px"
           $isClickAble={true}
+          onClick={() => router.push("/auth/findaccount")}
         >{`can't login?`}</Text>
       </SectionBox>
     </MainBox>

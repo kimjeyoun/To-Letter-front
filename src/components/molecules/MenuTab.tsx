@@ -4,7 +4,6 @@ import Tab from "@/components/atoms/Tab";
 import { usePathname, useRouter } from "next/navigation";
 import { NavBox } from "../atoms/Box";
 import { type menuTabDataI, menuList } from "@/lib/constants/menuTabList";
-import { useUser } from "@/hooks/useUser";
 
 type MenuListKeys = keyof typeof menuList;
 
@@ -15,7 +14,6 @@ type MenuListKeys = keyof typeof menuList;
 export default function MenuTab() {
   const router = useRouter();
   const pathname = usePathname();
-  const { myInfo } = useUser();
 
   // `pathKey` 계산 최적화
   const pathKey = useMemo(() => {
@@ -31,24 +29,19 @@ export default function MenuTab() {
   if (tabOption === "underline") {
     return (
       <NavBox>
-        {menuTabData
-          .filter(
-            ({ userRoleAble = "all" }) =>
-              userRoleAble === "all" || userRoleAble === myInfo.userRole
-          )
-          .map(({ title, path }: menuTabDataI) => (
-            <Tab
-              key={`${category}-${title}`}
-              keyValue={`tab-${category}-${title}`}
-              TabTitle={title}
-              tabOption={tabOption}
-              onClick={() => router.push(`${path}`)}
-              $fontWeight="bold"
-              $padding="0 2px 4px 0"
-              $margin="0 24px 0 0"
-              $active={pathname.includes(path)}
-            />
-          ))}
+        {menuTabData.map(({ title, path }: menuTabDataI) => (
+          <Tab
+            key={`${category}-${title}`}
+            keyValue={`tab-${category}-${title}`}
+            TabTitle={title}
+            tabOption={tabOption}
+            onClick={() => router.push(`${path}`)}
+            $fontWeight="bold"
+            $padding="0 2px 4px 0"
+            $margin="0 24px 0 0"
+            $active={pathname.includes(path)}
+          />
+        ))}
       </NavBox>
     );
   } else {

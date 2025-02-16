@@ -31,24 +31,12 @@ export default function SignupContents() {
     message: "",
     visible: false,
   });
+  /** 닉네임 중복 체크 여부 관리 state */
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  /** 이메일 중복 체크 여부 관리 state */
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
   /** 회원가입 정보 관리 recoil */
   const [signupForm, setSignupForm] = useRecoilState(signupState);
-
-  /** 닉네임 체크 함수 */
-  const checkNickname = (bool: boolean) => {
-    setSignupForm((prev) => ({
-      ...prev,
-      isNicknameChecked: bool,
-    }));
-  };
-
-  /** 이메일 체크 함수 */
-  const checkEmail = (bool: boolean) => {
-    setSignupForm((prev) => ({
-      ...prev,
-      isEmailChecked: bool,
-    }));
-  };
 
   /** 회원가입 정보 입력 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
@@ -56,8 +44,8 @@ export default function SignupContents() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    if (e.target.name === "nickname") checkNickname(false);
-    else if (e.target.name === "email") checkEmail(false);
+    if (e.target.name === "nickname") setIsNicknameChecked(false);
+    else if (e.target.name === "email") setIsEmailChecked(false);
   };
 
   /** 주소 입력 모달 열기 함수 */
@@ -93,11 +81,11 @@ export default function SignupContents() {
         message: "우편함 주소를 입력해주세요.",
       },
       {
-        check: signupForm.isNicknameChecked,
+        check: isNicknameChecked,
         message: "닉네임 중복 체크를 해주세요.",
       },
       {
-        check: signupForm.isEmailChecked,
+        check: isEmailChecked,
         message: "이메일 중복 체크를 해주세요.",
       },
     ];
@@ -141,10 +129,10 @@ export default function SignupContents() {
         });
         if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
-          checkNickname(true);
+          setIsNicknameChecked(true);
         } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
-          checkNickname(false);
+          setIsNicknameChecked(false);
         }
       } catch (error: any) {
         setToast({
@@ -166,10 +154,10 @@ export default function SignupContents() {
         });
         if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 이메일입니다.", visible: true });
-          checkEmail(true);
+          setIsEmailChecked(true);
         } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 이메일입니다.", visible: true });
-          checkEmail(false);
+          setIsNicknameChecked(false);
         }
       } catch (error: any) {
         setToast({
@@ -193,7 +181,7 @@ export default function SignupContents() {
           isExistButton={true}
           buttonTitle="중복 체크"
           onClick={onClickConfirmNickname}
-          $disable={signupForm.isNicknameChecked}
+          $disable={isNicknameChecked}
         />
         <InputForm
           keyValue="inputform-email"
@@ -205,7 +193,7 @@ export default function SignupContents() {
           isExistButton={true}
           buttonTitle="중복 체크"
           onClick={onClickConfirmEmail}
-          $disable={signupForm.isEmailChecked}
+          $disable={isEmailChecked}
         />
         <InputForm
           keyValue="inputform-password"
